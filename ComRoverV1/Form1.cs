@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 
@@ -20,7 +20,7 @@ namespace ComRoverV1
 
             InitializeComponent();
 
-            ButtonsEnable();
+            ButtonsDisable();
            
         }
         public void init()
@@ -28,13 +28,14 @@ namespace ComRoverV1
             try
             {
                 myPort = new SerialPort();
-                myPort.BaudRate = 115200;
+                myPort.BaudRate = 57600;
               //  myPort.PortName = "COM3";
                 myPort.PortName = String.Concat("COM", comPortBox.Text );
                 myPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
                 myPort.Open();
 
                 ButtonsEnable();
+                buttonGo.Enabled = false;
                 MessageBox.Show("Connexion réussi !");
             }
 
@@ -51,6 +52,8 @@ namespace ComRoverV1
             buttonRight.Enabled = false;
             buttonLeft.Enabled = false;
             buttonStop.Enabled = false;
+            buttonGo.Enabled = true;
+
         }
 
         private void ButtonsEnable()
@@ -59,6 +62,9 @@ namespace ComRoverV1
             buttonDown.Enabled = true;
             buttonRight.Enabled = true;
             buttonLeft.Enabled = true;
+            buttonStop.Enabled = true;
+            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -73,7 +79,7 @@ namespace ComRoverV1
    
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            myPort.WriteLine("q");
+            myPort.WriteLine("z");
         }
 
         private void buttonRight_Click(object sender, EventArgs e)
@@ -104,26 +110,42 @@ namespace ComRoverV1
         private void buttonGo_Click(object sender, EventArgs e)
         {
             init();
+           
+
+
         }
 
         private void buttonDeconnexion_Click(object sender, EventArgs e)
         {
-            myPort.Close();
+            try
+            {
+                myPort.Close();
+            }
+            catch
+            {
+
+            }
             ButtonsDisable();
+            buttonGo.Enabled = true;
         }
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadExisting();
-           // NewMethod(indata);
 
-             //  Console.Write(indata);
-             //  MessageBox.Show(indata); // pourquoi ca ca marche ??
+            NewMethod(indata);
+           
         }
 
         public void NewMethod(string indata)
         {
-            serialDistanceValue.Text = indata;//.ToString; // fuck de truck statique
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+
+                serialDistanceValue.Text = indata;//.ToString();
+            }));
+
+         
         }
 
         private void labelCOMPortNumber_Click(object sender, EventArgs e)
@@ -132,6 +154,94 @@ namespace ComRoverV1
         }
 
         private void serialDistanceValue_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+          
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+            
+        }
+
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (char)Keys.W)
+            {
+                try
+                {
+                    myPort.WriteLine("w");
+                }
+                catch
+                {
+
+                }
+           
+            }
+
+            if (e.KeyValue == (char)Keys.A)
+            {
+                try
+                {
+                    myPort.WriteLine("a");
+                }
+                catch
+                {
+
+                }
+
+            }
+            if (e.KeyValue == (char)Keys.D)
+            {
+                try
+                {
+                    myPort.WriteLine("d");
+                }
+                catch
+                {
+
+                }
+
+
+            }
+            if (e.KeyValue == (char)Keys.S)
+            {
+                try
+                {
+                    myPort.WriteLine("s");
+                }
+                catch
+                {
+
+                }
+
+            }
+            if (e.KeyValue == (char)Keys.C)
+            {
+                try
+                {
+                    myPort.WriteLine("z");
+                }
+                catch
+                {
+
+                }
+
+
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
