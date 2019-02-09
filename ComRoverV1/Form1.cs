@@ -28,7 +28,7 @@ namespace ComRoverV1
             try
             {
                 myPort = new SerialPort();
-                myPort.BaudRate = 57600;
+                myPort.BaudRate = 115200;
               //  myPort.PortName = "COM3";
                 myPort.PortName = String.Concat("COM", comPortBox.Text );
                 myPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
